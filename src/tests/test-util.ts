@@ -10,7 +10,7 @@ export class UserTest {
           cost: 10,
         }),
         name: "test",
-        token: crypto.randomUUID(),
+        token: "test",
       },
     });
   }
