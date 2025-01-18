@@ -5,21 +5,21 @@ export class UserTest {
     await prismaClient.user.create({
       data: {
         username: "test",
-        password: "test",
-        name: await Bun.password.hash("test", {
+        password: await Bun.password.hash("test", {
           algorithm: "bcrypt",
           cost: 10,
         }),
-        token: "test",
+        name: "test",
+        token: crypto.randomUUID(),
       },
     });
   }
 
-  static async delete () {
+  static async delete() {
     await prismaClient.user.deleteMany({
       where: {
         username: "test",
-      }
-    })
+      },
+    });
   }
 }

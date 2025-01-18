@@ -1,4 +1,4 @@
-import { afterEach, describe, expect, it } from "bun:test";
+import { afterEach, beforeEach, describe, expect, it } from "bun:test";
 import { logger } from "../application/logging";
 import { app } from "..";
 import { UserTest } from "./test-util";
@@ -51,5 +51,50 @@ describe("POST /api/users", () => {
     expect(body.data).toBeDefined();
     expect(body.data.username).toBe("test");
     expect(body.data.name).toBe("test");
+  });
+});
+
+describe("POST /api/users/login", () => {
+  beforeEach(async () => {
+    await UserTest.create();
+  });
+  afterEach(async () => {
+    await UserTest.delete();
+  });
+  it("should login success", async () => {
+    const response = await app.request("/api/users/login", {
+      method: "post",
+      body: JSON.stringify({
+        username: "test",
+        password: "test",
+      }),
+    });
+    expect(response.status).toBe(200);
+    const body = await response.json();
+    expect(body.data).toBeDefined();
+  });
+  it("should login failed if username is wrong", async () => {
+    const response = await app.request("/api/users/login", {
+      method: "post",
+      body: JSON.stringify({
+        username: "salah",
+        password: "test",
+      }),
+    });
+    expect(response.status).toBe(401);
+    const body = await response.json();
+    expect(body.errors).toBeDefined();
+  });
+  it("should login failed if password is wrong", async () => {
+    const response = await app.request("/api/users/login", {
+      method: "post",
+      body: JSON.stringify({
+        username: "test",
+        password: "salah",
+      }),
+    });
+    expect(response.status).toBe(401);
+    const body = await response.json();
+    expect(body.errors).toBeDefined();
   });
 });

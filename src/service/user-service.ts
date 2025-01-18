@@ -1,5 +1,6 @@
 import { prismaClient } from "../application/database";
 import {
+  LoginUserRequest,
   RegisterUserRequest,
   toUserResponse,
   UserResponse,
@@ -34,5 +35,41 @@ export class UserService {
     // return
     return toUserResponse(user);
   }
-  async getUser(username: string) {}
+  static async login(request: LoginUserRequest): Promise<UserResponse> {
+    // validari request
+    request = UserValidation.LOGIN.parse(request);
+    // cek apakah ada di database atau tidak
+    let user = await prismaClient.user.findUnique({
+      where: {
+        username: request.username,
+      },
+    });
+    if (!user) {
+      throw new HTTPException(401, {
+        message: "Username or password is wrong",
+      });
+    }
+    // cek password
+    const isValidPassword = await Bun.password.verify(
+      request.password,
+      user.password
+    );
+    if (!isValidPassword) {
+      throw new HTTPException(401, {
+        message: "Username or password is wrong",
+      });
+    }
+    user = await prismaClient.user.update({
+      where: {
+        username: request.username,
+      },
+      data: {
+        token: crypto.randomUUID(),
+      },
+    });
+    // return
+    const response = toUserResponse(user);
+    response.token = user.token!;
+    return response;
+  }
 }
