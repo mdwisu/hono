@@ -140,3 +140,68 @@ describe("GET /api/users/current", () => {
     expect(body.errors).toBeDefined();
   });
 });
+
+describe("PATH /api/users/current", () => {
+  beforeEach(async () => {
+    await UserTest.create();
+  });
+  afterEach(async () => {
+    await UserTest.delete();
+  });
+
+  it("should reject update user if request is invalid", async () => {
+    const response = await app.request("/api/users/current", {
+      method: "patch",
+      body: JSON.stringify({
+        name: "",
+        password: "",
+      }),
+      headers: {
+        Authorization: "test",
+      },
+    });
+    expect(response.status).toBe(400);
+    const body = await response.json();
+    expect(body.errors).toBeDefined();
+  });
+  it("should be able to update name", async () => {
+    const response = await app.request("/api/users/current", {
+      method: "patch",
+      body: JSON.stringify({
+        name: "dwi",
+      }),
+      headers: {
+        Authorization: "test",
+      },
+    });
+    // expect(response.status).toBe(200);
+    const body = await response.json();
+    logger.error(body);
+    expect(body.data).toBeDefined();
+    expect(body.data.name).toBe("dwi");
+  });
+  it("should be able to update password", async () => {
+    let response = await app.request("/api/users/current", {
+      method: "patch",
+      body: JSON.stringify({
+        password: "baru",
+      }),
+      headers: {
+        Authorization: "test",
+      },
+    });
+    // expect(response.status).toBe(200);
+    const body = await response.json();
+    logger.error(body);
+    expect(body.data).toBeDefined();
+
+    response = await app.request("/api/users/login", {
+      method: "post",
+      body: JSON.stringify({
+        username: "test",
+        password: "baru",
+      }),
+    });
+    expect(response.status).toBe(200);
+  });
+});
