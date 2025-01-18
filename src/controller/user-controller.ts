@@ -53,3 +53,11 @@ userController.patch("/current", async (c) => {
     data: response,
   });
 });
+
+userController.delete("/logout", async (c) => {
+  const user = c.get("user") as User;
+  const response = await UserService.logout(user);
+  return c.json({
+    data: response,
+  });
+});
