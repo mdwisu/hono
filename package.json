@@ -1,7 +1,8 @@
 {
   "name": "hono",
   "scripts": {
-    "dev": "bun run --hot src/index.tsx"
+    "dev": "bun run --hot src/index.tsx",
+    "test": "bun test"
   },
   "dependencies": {
     "@prisma/client": "^6.2.1",
