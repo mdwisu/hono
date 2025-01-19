@@ -8,19 +8,20 @@ import {
 import { UserService } from "../service/user-service";
 import { ApplicationVariables } from "../model/app-model";
 import { User } from "@prisma/client";
+import { authMiddleware } from "../middleware/auth-middleware";
 
 export const userController = new Hono<{
   Variables: ApplicationVariables;
-}>().basePath("/api/users");
+}>();
 
-userController.post("/", async (c: any) => {
+userController.post("/", async (c) => {
   const request = (await c.req.json()) as RegisterUserRequest;
   const response = await UserService.register(request);
   return c.json({
     data: response,
   });
 });
-userController.post("/login", async (c: any) => {
+userController.post("/login", async (c) => {
   const request = (await c.req.json()) as LoginUserRequest;
   const response = await UserService.login(request);
   return c.json({
@@ -28,14 +29,7 @@ userController.post("/login", async (c: any) => {
   });
 });
 
-userController.use(async (c, next) => {
-  const token = c.req.header("Authorization");
-  const user = await UserService.get(token);
-
-  c.set("user", user);
-
-  await next();
-});
+userController.use(authMiddleware);
 userController.get("/current", async (c) => {
   // ambil user
   const user = c.get("user") as User;

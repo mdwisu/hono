@@ -3,9 +3,11 @@ import { HTTPException } from "hono/http-exception";
 import { ZodError } from "zod";
 import { basicAuth } from "hono/basic-auth";
 import { userController } from "./controller/user-controller";
+import { contactController } from "./controller/contact-controller";
 
 export const app = new Hono();
-app.route("/", userController);
+app.route("/api/users", userController);
+app.route("/api/contact", contactController);
 
 app.onError(async (err, c) => {
   if (err instanceof HTTPException) {
@@ -85,6 +87,7 @@ app.on("GET", ["/hello", "/ja/hello", "/en/hello"], (c) => c.text("Hello"));
 // path parameter
 app.get("/posts/:id/comment/:comment_id", async (c) => {
   const { id, comment_id } = c.req.param();
+  console.log(id, comment_id);
   // ...
 });
 // optional parameter
@@ -94,6 +97,7 @@ app.get("/api/animal/:type?", (c) => c.text("Animal!"));
 // regex parameter
 app.get("/post/:date{[0-9]+}/:title{[a-z]+}", async (c) => {
   const { date, title } = c.req.param();
+  console.log(date, title);
   // ...
 });
 //  chained route
