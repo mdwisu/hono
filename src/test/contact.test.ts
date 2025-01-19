@@ -136,3 +136,70 @@ describe("GET /api/contacts/{id}", () => {
     expect(body.data.id).toBe(contact.id);
   });
 });
+
+describe("PUT /api/contacts/{id}", () => {
+  beforeEach(async () => {
+    await ContactTest.deleteAll();
+    await UserTest.create();
+    await ContactTest.create();
+  });
+  afterEach(async () => {
+    await ContactTest.deleteAll();
+    await UserTest.delete();
+  });
+
+  it("should rejected if request is invalid", async () => {
+    const contact = await ContactTest.get();
+
+    const response = await app.request(`/api/contacts/${contact.id}`, {
+      method: "put",
+      headers: {
+        Authorization: "test",
+      },
+      body: JSON.stringify({
+        first_name: "",
+      }),
+    });
+    expect(response.status).toBe(400);
+
+    const body = await response.json();
+    expect(body.errors).toBeDefined();
+  });
+  it("should rejected if id not found", async () => {
+    const contact = await ContactTest.get();
+    const response = await app.request(`/api/contacts/${contact.id + 1}`, {
+      method: "put",
+      headers: {
+        Authorization: "test",
+      },
+      body: JSON.stringify({
+        first_name: "Dwi",
+      }),
+    });
+    expect(response.status).toBe(404);
+    const body = await response.json();
+    expect(body.errors).toBeDefined();
+  });
+  it("should success if request is valid", async () => {
+    const contact = await ContactTest.get();
+    const response = await app.request(`/api/contacts/${contact.id}`, {
+      method: "put",
+      headers: {
+        Authorization: "test",
+      },
+      body: JSON.stringify({
+        first_name: "Dwi",
+        last_name: "Susanto",
+        email: "dwisusanto784@gmail.com",
+        phone: "081218583533",
+      }),
+    });
+    expect(response.status).toBe(200);
+    const body = await response.json();
+    expect(body.data).toBeDefined();
+    expect(body.data.first_name).toBe("Dwi");
+    expect(body.data.last_name).toBe("Susanto");
+    expect(body.data.email).toBe("dwisusanto784@gmail.com");
+    expect(body.data.phone).toBe("081218583533");
+  });
+});
