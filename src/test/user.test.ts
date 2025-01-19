@@ -190,7 +190,7 @@ describe("PATH /api/users/current", () => {
         Authorization: "test",
       },
     });
-    // expect(response.status).toBe(200);
+    expect(response.status).toBe(200);
     const body = await response.json();
     logger.error(body);
     expect(body.data).toBeDefined();

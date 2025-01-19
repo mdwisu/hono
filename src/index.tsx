@@ -7,7 +7,7 @@ import { contactController } from "./controller/contact-controller";
 
 export const app = new Hono();
 app.route("/api/users", userController);
-app.route("/api/contact", contactController);
+app.route("/api/contacts", contactController);
 
 app.onError(async (err, c) => {
   if (err instanceof HTTPException) {
@@ -25,7 +25,6 @@ app.onError(async (err, c) => {
     });
   } else {
     console.log("ini error3");
-
     c.status(500);
     return c.json({
       errors: err.message,
