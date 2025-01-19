@@ -7,4 +7,6 @@ export class contactValidation {
     email: z.string().min(1).max(100).email().optional(),
     phone: z.string().min(1).max(20).optional(),
   });
+
+  static readonly GET: ZodType = z.number().positive();
 }
