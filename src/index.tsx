@@ -4,10 +4,12 @@ import { ZodError } from "zod";
 import { basicAuth } from "hono/basic-auth";
 import { userController } from "./controller/user-controller";
 import { contactController } from "./controller/contact-controller";
+import { addressController } from "./controller/address-controller";
 
 export const app = new Hono();
 app.route("/api/users", userController);
 app.route("/api/contacts", contactController);
+app.route("/", addressController);
 
 app.onError(async (err, c) => {
   if (err instanceof HTTPException) {
