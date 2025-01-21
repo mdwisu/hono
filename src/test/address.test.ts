@@ -138,3 +138,90 @@ describe("GET /api/contacts/{idContact}/addresses/{idAddress}", () => {
     expect(body.data.postal_code).toBe(address.postal_code);
   });
 });
+
+describe("PUT /api/contacts/{idContact}/addresses/{idAddress}", () => {
+  beforeEach(async () => {
+    await AddressTest.deleteAll();
+    await ContactTest.deleteAll();
+    await UserTest.delete();
+
+    await UserTest.create();
+    await ContactTest.create();
+    await AddressTest.create();
+  });
+  afterEach(async () => {
+    await AddressTest.deleteAll();
+    await ContactTest.deleteAll();
+    await UserTest.delete();
+  });
+
+  it("should rejected if request is not valid", async () => {
+    const contact = await ContactTest.get();
+    const address = await AddressTest.get();
+    const response = await app.request(
+      `/api/contacts/${contact.id}/addresses/${address.id}`,
+      {
+        method: "put",
+        headers: {
+          Authorization: "test",
+        },
+        body: JSON.stringify({
+          country: "",
+          postal_code: "",
+        }),
+      }
+    );
+    expect(response.status).toBe(400);
+    const body = await response.json();
+    expect(body.errors).toBeDefined();
+  });
+  it("should rejected if address not found", async () => {
+    const contact = await ContactTest.get();
+    const address = await AddressTest.get();
+    const response = await app.request(
+      `/api/contacts/${contact.id}/addresses/${address.id + 1}`,
+      {
+        method: "put",
+        headers: {
+          Authorization: "test",
+        },
+        body: JSON.stringify({
+          country: "Indonesia",
+          postal_code: "1234",
+        }),
+      }
+    );
+    expect(response.status).toBe(404);
+    const body = await response.json();
+    expect(body.errors).toBeDefined();
+  });
+  it("should success if request is valid", async () => {
+    const contact = await ContactTest.get();
+    const address = await AddressTest.get();
+    const response = await app.request(
+      `/api/contacts/${contact.id}/addresses/${address.id}`,
+      {
+        method: "put",
+        headers: {
+          Authorization: "test",
+        },
+        body: JSON.stringify({
+          street: "test",
+          city: "Kuala Lumpur",
+          province: "Malaysia",
+          country: "Malaysia",
+          postal_code: "9999",
+        }),
+      }
+    );
+    expect(response.status).toBe(200);
+    const body = await response.json();
+    expect(body.data).toBeDefined();
+    expect(body.data.id).toBe(address.id);
+    expect(body.data.street).toBe("test");
+    expect(body.data.city).toBe("Kuala Lumpur");
+    expect(body.data.province).toBe("Malaysia");
+    expect(body.data.country).toBe("Malaysia");
+    expect(body.data.postal_code).toBe("9999");
+  });
+});
