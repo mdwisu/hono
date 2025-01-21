@@ -1,0 +1,150 @@
+GET http://localhost:3000/
+
+### Register User
+POST http://localhost:3000/api/users
+Content-Type: application/json
+Accept: application/json
+
+{
+  "username": "Dwi",
+  "password": "1234",
+  "name": "Muhammad Dwi Susanto"
+}
+
+### Login User
+POST http://localhost:3000/api/users/login
+Content-Type: application/json
+Accept: application/json
+
+{
+  "username": "dwi",
+  "password": "rahasia"
+}
+
+### Get current user
+GET http://localhost:3000/api/users/current
+Content-Type: application/json
+Accept: application/json
+Authorization: d6a194f0-9bcd-4ec4-a5d5-f41c2b185237
+
+### Update current user
+PATCH http://localhost:3000/api/users/current
+Content-Type: application/json
+Accept: application/json
+Authorization: d6a194f0-9bcd-4ec4-a5d5-f41c2b185237
+
+{
+  "name":"update"
+}
+
+### Update current user
+PATCH http://localhost:3000/api/users/current
+Content-Type: application/json
+Accept: application/json
+Authorization: d6a194f0-9bcd-4ec4-a5d5-f41c2b185237
+
+{
+  "password":"rahasia"
+}
+
+### Logout User
+DELETE http://localhost:3000/api/users/logout
+Content-Type: application/json
+Accept: application/json
+Authorization: d6a194f0-9bcd-4ec4-a5d5-f41c2b185237
+
+### Create Contact
+POST http://localhost:3000/api/contacts
+Content-Type: application/json
+Accept: application/json
+Authorization: d6a194f0-9bcd-4ec4-a5d5-f41c2b185237
+
+{
+  "first_name": "salah"
+}
+
+### Create Contact
+POST http://localhost:3000/api/contacts
+Content-Type: application/json
+Accept: application/json
+Authorization: d6a194f0-9bcd-4ec4-a5d5-f41c2b185237
+
+{
+  "first_name": "dwi",
+  "last_name": "lastname",
+  "email": "kontak2@gmail.com",
+  "phone": "080123012323"
+}
+
+### search contact
+GET http://localhost:3000/api/contacts
+Content-Type: application/json
+Accept: application/json
+Authorization: d6a194f0-9bcd-4ec4-a5d5-f41c2b185237
+
+### detail contact
+GET http://localhost:3000/api/contacts/3633
+Content-Type: application/json
+Accept: application/json
+Authorization: d6a194f0-9bcd-4ec4-a5d5-f41c2b185237
+
+### detail contact
+PUT http://localhost:3000/api/contacts/3632
+Content-Type: application/json
+Accept: application/json
+Authorization: d6a194f0-9bcd-4ec4-a5d5-f41c2b185237
+
+{
+  "first_name": "dwi",
+  "last_name": "susanto",
+  "email": "dwi@gmail.com",
+  "phone": "081218386051"
+}
+### delete contact
+DELETE http://localhost:3000/api/contacts/3634
+Content-Type: application/json
+Accept: application/json
+Authorization: d6a194f0-9bcd-4ec4-a5d5-f41c2b185237
+
+
+### Create Address
+POST http://localhost:3000/api/contacts/3632/addresses
+Content-Type: application/json
+Accept: application/json
+Authorization: d6a194f0-9bcd-4ec4-a5d5-f41c2b185237
+
+{
+  "street": "jalan b",
+  "city": "jakarta",
+  "province": "dki jakarta",
+  "country": "indoensia",
+  "postal_code": "123123"
+}
+### List Address
+GET http://localhost:3000/api/contacts/3632/addresses
+Content-Type: application/json
+Accept: application/json
+Authorization: d6a194f0-9bcd-4ec4-a5d5-f41c2b185237
+### Detail Address
+GET http://localhost:3000/api/contacts/3632/addresses/114
+Content-Type: application/json
+Accept: application/json
+Authorization: d6a194f0-9bcd-4ec4-a5d5-f41c2b185237
+### Detail Address
+PUT http://localhost:3000/api/contacts/3632/addresses/113
+Content-Type: application/json
+Accept: application/json
+Authorization: d6a194f0-9bcd-4ec4-a5d5-f41c2b185237
+
+{
+  "street": "jalan 1",
+  "city": "jakarta 1",
+  "province": "dki jakarta 1",
+  "country": "indoensia 1",
+  "postal_code": "1231231"
+}
+### Delete Address
+DELETE http://localhost:3000/api/contacts/3632/addresses/114
+Content-Type: application/json
+Accept: application/json
+Authorization: d6a194f0-9bcd-4ec4-a5d5-f41c2b185237

@@ -14,14 +14,14 @@ export const userController = new Hono<{
   Variables: ApplicationVariables;
 }>();
 
-userController.post("/", async (c) => {
+userController.post("/api/users", async (c) => {
   const request = (await c.req.json()) as RegisterUserRequest;
   const response = await UserService.register(request);
   return c.json({
     data: response,
   });
 });
-userController.post("/login", async (c) => {
+userController.post("/api/users/login", async (c) => {
   const request = (await c.req.json()) as LoginUserRequest;
   const response = await UserService.login(request);
   return c.json({
@@ -30,7 +30,7 @@ userController.post("/login", async (c) => {
 });
 
 userController.use(authMiddleware);
-userController.get("/current", async (c) => {
+userController.get("/api/users/current", async (c) => {
   // ambil user
   const user = c.get("user") as User;
 
@@ -39,7 +39,7 @@ userController.get("/current", async (c) => {
   });
 });
 
-userController.patch("/current", async (c) => {
+userController.patch("/api/users/current", async (c) => {
   const user = c.get("user") as User;
   const request = (await c.req.json()) as UpdateUserRequest;
   const response = await UserService.update(user, request);
@@ -48,7 +48,7 @@ userController.patch("/current", async (c) => {
   });
 });
 
-userController.delete("/logout", async (c) => {
+userController.delete("/api/users/logout", async (c) => {
   const user = c.get("user") as User;
   const response = await UserService.logout(user);
   return c.json({

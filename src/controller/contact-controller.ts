@@ -14,7 +14,7 @@ export const contactController = new Hono<{
 }>();
 contactController.use(authMiddleware);
 
-contactController.post("/", async (c) => {
+contactController.post("/api/contacts", async (c) => {
   const user = c.get("user") as User;
   const request = (await c.req.json()) as CreateContactRequest;
   const response = await ContactService.create(user, request);
@@ -24,7 +24,7 @@ contactController.post("/", async (c) => {
   });
 });
 
-contactController.get("/:id", async (c) => {
+contactController.get("/api/contacts/:id", async (c) => {
   const user = c.get("user") as User;
   const contactId = Number(c.req.param("id"));
   const response = await ContactService.get(user, contactId);
@@ -33,7 +33,7 @@ contactController.get("/:id", async (c) => {
   });
 });
 
-contactController.put("/:id", async (c) => {
+contactController.put("/api/contacts/:id", async (c) => {
   const user = c.get("user") as User;
   const contactId = Number(c.req.param("id"));
   const request = (await c.req.json()) as UpdateContactRequest;
@@ -44,7 +44,7 @@ contactController.put("/:id", async (c) => {
   });
 });
 
-contactController.delete("/:id", async (c) => {
+contactController.delete("/api/contacts/:id", async (c) => {
   const user = c.get("user") as User;
   const contactId = Number(c.req.param("id"));
   const response = await ContactService.delete(user, contactId);
@@ -53,7 +53,7 @@ contactController.delete("/:id", async (c) => {
   });
 });
 
-contactController.get("/", async (c) => {
+contactController.get("/api/contacts", async (c) => {
   const user = c.get("user") as User;
   const request: SearchContactRequest = {
     name: c.req.query("name") as string,

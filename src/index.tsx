@@ -7,13 +7,13 @@ import { contactController } from "./controller/contact-controller";
 import { addressController } from "./controller/address-controller";
 
 export const app = new Hono();
-app.route("/api/users", userController);
-app.route("/api/contacts", contactController);
+app.route("/", userController);
+app.route("/", contactController);
 app.route("/", addressController);
-
 app.onError(async (err, c) => {
   if (err instanceof HTTPException) {
     c.status(err.status);
+    console.log("ini error", err);
     console.log("ini error");
     return c.json({
       errors: err.message,
@@ -33,7 +33,6 @@ app.onError(async (err, c) => {
     });
   }
 });
-
 app.get("/", (c) => {
   return c.text("Hello Hono!");
 });
