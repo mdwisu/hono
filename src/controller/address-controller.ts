@@ -4,6 +4,7 @@ import { ApplicationVariables } from "../model/app-model";
 import {
   CreateAddressRequest,
   GetAddressRequest,
+  RemoveAddressRequest,
   UpdateAddressRequest,
 } from "../model/address-model";
 import { User } from "@prisma/client";
@@ -48,6 +49,21 @@ addressController.put(
     request.contact_id = Number(c.req.param("contact_id"));
     request.id = Number(c.req.param("address_id"));
     const response = await AddressService.update(user, request);
+    return c.json({
+      data: response,
+    });
+  }
+);
+
+addressController.delete(
+  "/api/contacts/:contact_id/addresses/:address_id",
+  async (c) => {
+    const user = c.get("user") as User;
+    const request: RemoveAddressRequest = {
+      contact_id: Number(c.req.param("contact_id")),
+      id: Number(c.req.param("address_id")),
+    };
+    const response = await AddressService.remove(user, request);
     return c.json({
       data: response,
     });
