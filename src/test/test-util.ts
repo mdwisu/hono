@@ -61,6 +61,28 @@ export class ContactTest {
 }
 
 export class AddressTest {
+  static async create() {
+    const contact = await ContactTest.get();
+    await prismaClient.address.create({
+      data: {
+        contact_id: contact.id,
+        street: "jalan",
+        city: "kota",
+        province: "provinsi",
+        country: "Indonesia",
+        postal_code: "1234",
+      },
+    });
+  }
+  static async get() {
+    return prismaClient.address.findFirstOrThrow({
+      where: {
+        contact: {
+          username: "test",
+        },
+      },
+    });
+  }
   static async deleteAll() {
     await prismaClient.address.deleteMany({
       where: {
